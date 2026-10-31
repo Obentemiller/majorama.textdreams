@@ -1,49 +1,49 @@
-# Majorama.sonho
+# Majorama.textdreams
 
-Um **DeepDream de um LLM**: um modelo de visão descreve as regiões de uma imagem, e o site preenche cada região com a própria descrição, em ASCII colorido. Roda inteiro no navegador (nenhum dado sai da sua máquina).
+A **DeepDream for an LLM**: a vision model describes the regions of an image, and the site fills each region with its own description, in colored ASCII. It runs entirely in the browser (no data leaves your machine).
 
-## Como funciona
+## How it works
 
-1. **Abertura:** história do DeepDream (2015) e o que muda aqui.
-2. **Guia:** você copia um prompt, cola num LLM com visão (de preferência o Claude) junto com a imagem e recebe um JSON de regiões.
-3. **Gerar:** cole a imagem e o JSON; escolha mundo preto ou com a cor da imagem; baixe `.txt` ou `.png`.
+1. **Intro:** the history of DeepDream (2015) and what changes here.
+2. **Guide:** you copy a prompt, paste it into a vision-capable LLM (preferably Claude) along with the image, and receive a JSON of regions.
+3. **Generate:** paste the image and the JSON; choose a black background or one with the image's color; download `.txt` or `.png`.
 
-O LLM só descreve; o **script** desenha: segmenta por cor dentro das caixas, traça contornos `/ \ | -`, repete a descrição para preencher cada região (na vertical se for estreita) e, se faltar espaço, apaga letras espalhadas (vogais primeiro).
+The LLM only describes; the **script** draws: it segments by color within the boxes, traces outlines `/ \ | -`, repeats the description to fill each region (vertically if it's narrow) and, if there isn't enough space, erases scattered letters (vowels first).
 
-Detalhes de uso: [`manual.md`](manual.md).
+Usage details: [`manual.md`](manual.md).
 
-## Publicar no GitHub Pages
+## Publishing on GitHub Pages
 
-1. Troque `USUARIO/REPO` em `index.html` e `app.js` pelo seu usuário e repositório.
-2. Envie os arquivos para o repositório (raiz).
+1. Replace `USUARIO/REPO` in `index.html` and `app.js` with your username and repository.
+2. Upload the files to the repository (root).
 3. *Settings → Pages → Deploy from a branch → `main` / `(root)`*.
 
-Para testar localmente: `python3 -m http.server` e abra `http://localhost:8000` (não abra o `index.html` direto do disco: o Worker precisa de servidor; sem ele o site cai num plano B mais lento, na própria página).
+To test locally: `python3 -m http.server` and open `http://localhost:8000` (don't open `index.html` directly from disk: the Worker needs a server; without it the site falls back to a slower plan B, on the page itself).
 
-## Estrutura
+## Structure
 
-| Arquivo | Papel |
+| File | Role |
 |---|---|
-| `index.html` | Páginas, CSP, ids do padrão Majorama |
-| `app.js` / `app.css` | Telas, tutorial, interação |
-| `engine.js` / `worker.js` | Motor (JSON → grade ASCII), em Web Worker |
-| `arte.js` | Imagem, miniatura, exemplo, downloads |
-| `prompt.js` | O prompt guia |
-| `bg.js` | Fundo animado pré-programado |
-| `vendor/majorama-ui/` | Kit de interface (não editar) |
-| `tests/` | `engine.test.mjs` (Node puro), `ui_smoke.mjs` (jsdom) |
+| `index.html` | Pages, CSP, Majorama pattern ids |
+| `app.js` / `app.css` | Screens, tutorial, interaction |
+| `engine.js` / `worker.js` | Engine (JSON → ASCII grid), in a Web Worker |
+| `arte.js` | Image, thumbnail, example, downloads |
+| `prompt.js` | The guide prompt |
+| `bg.js` | Preprogrammed animated background |
+| `vendor/majorama-ui/` | Interface kit (do not edit) |
+| `tests/` | `engine.test.mjs` (pure Node), `ui_smoke.mjs` (jsdom) |
 
-## Testes
+## Tests
 
 ```
 node tests/engine.test.mjs
 npm install --no-save jsdom && node tests/ui_smoke.mjs
 ```
 
-## Segurança
+## Security
 
-CSP restritiva (`default-src 'none'`, sem rede, scripts só do próprio site), sem `innerHTML` com dados externos, imagem validada pelos bytes (SVG recusado), limites de tamanho (25 MB, 80 MP, JSON 200 mil caracteres, 64 regiões), downloads com nome fixo.
+Restrictive CSP (`default-src 'none'`, no network, scripts only from the site itself), no `innerHTML` with external data, images validated by their bytes (SVG rejected), size limits (25 MB, 80 MP, JSON 200 thousand characters, 64 regions), downloads with fixed names.
 
-## Limites
+## Limits
 
-Não é o algoritmo original do DeepDream. O segmentador é heurístico (caixa do LLM + cor real). Só imagens estáticas.
+It is not the original DeepDream algorithm. The segmenter is heuristic (LLM box + actual color). Static images only.
