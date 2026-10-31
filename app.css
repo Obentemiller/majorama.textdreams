@@ -1,0 +1,112 @@
+/* Regras específicas do Majorama.sonho. O visual geral vem de vendor/majorama-ui/majorama-ui.css (não edite lá). */
+
+/* ---------------- palco: fundo animado + telas ---------------- */
+#bg{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.5;}
+.tela{position:absolute;inset:0;overflow:auto;padding:20px 16px;}
+.tela-in{min-height:100%;max-width:980px;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.tela-in.larga{max-width:1100px;}
+.kicker,.titulo,.sub,.nota{text-shadow:0 0 4px var(--bg-0),0 0 10px var(--bg-0),0 0 18px var(--bg-0);}
+.kicker{margin:0;color:var(--accent);letter-spacing:3px;font-size:12px;}
+.titulo{margin:0;text-align:center;font-size:clamp(21px,3.6vw,34px);line-height:1.2;letter-spacing:.3px;}
+.titulo:focus{outline:none;}
+.sub{margin:0;max-width:64ch;text-align:center;color:var(--fg-dim);font-size:13px;line-height:1.65;}
+.nota{margin:0;color:var(--fg-dim);font-size:11.5px;text-align:center;}
+.dim{color:var(--fg-dim);}
+
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;}
+.card{background:rgba(14,17,21,.9);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:12.5px;line-height:1.65;}
+.card h3{margin:0 0 8px;font-size:13.5px;color:var(--accent-2);}
+.card.novo{border-color:#245c46;}
+.card.novo h3{color:var(--accent);}
+.card p{margin:0 0 8px;}
+.card p:last-child{margin-bottom:0;}
+.card q{color:var(--warn);quotes:"“" "”";}
+
+.cta{font-size:15px;font-weight:700;padding:14px 30px;border-radius:8px;color:var(--bg-0);background:var(--accent);border-color:var(--accent);min-height:48px;}
+.cta:hover:not(:disabled){background:#6ef0b8;border-color:#6ef0b8;}
+.cta.pequeno{font-size:13px;padding:9px 16px;min-height:44px;}
+button.primario{color:var(--accent);border-color:#245c46;}
+
+/* ---------------- tela 2: como pedir ---------------- */
+.guia{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;width:100%;align-items:start;}
+.passos{list-style:none;margin:0;padding:0;display:grid;gap:10px;}
+.passo{background:rgba(14,17,21,.92);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.6;transition:border-color .25s;}
+.passo.ativo{border-color:var(--accent);}
+.passo p{margin:6px 0 0;}
+.passo .n{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;background:var(--bg-2);color:var(--accent);margin-right:8px;font-weight:700;}
+.passo code{color:var(--accent-2);}
+.passo a{color:var(--accent-2);}
+#prompt-box{margin:8px 0;max-height:168px;overflow:auto;background:var(--bg-0);border:1px solid var(--line);border-radius:6px;padding:10px;font-family:var(--mono);font-size:11.5px;line-height:1.5;white-space:pre-wrap;color:var(--fg-dim);}
+#prompt-box:focus-visible{outline:2px solid var(--accent-2);}
+.passo button{min-height:36px;}
+
+/* a "janela de chat" animada */
+.chat{background:rgba(14,17,21,.94);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:11.5px;position:sticky;top:0;}
+.chat-barra{display:flex;align-items:center;gap:6px;padding:8px 10px;background:var(--bg-2);border-bottom:1px solid var(--line);color:var(--fg-dim);}
+.chat-barra i{width:9px;height:9px;border-radius:50%;background:var(--line);display:inline-block;}
+.chat-barra span{margin-left:8px;}
+.chat-corpo{padding:12px;min-height:250px;display:flex;flex-direction:column;gap:10px;}
+.msg{border-radius:8px;padding:8px 10px;max-width:92%;}
+.msg.usuario{align-self:flex-end;background:#14261f;border:1px solid #245c46;min-width:60%;}
+.msg.ia{align-self:flex-start;background:var(--bg-2);border:1px solid var(--line);position:relative;min-height:34px;opacity:0;transition:opacity .3s;}
+.msg.ia.on{opacity:1;}
+.anexo{display:inline-block;margin-bottom:6px;padding:2px 8px;border:1px solid var(--accent-2);border-radius:5px;color:var(--accent-2);opacity:0;transform:translateY(-6px);transition:opacity .35s,transform .35s;}
+.anexo.on{opacity:1;transform:none;}
+.linhas{display:grid;gap:5px;}
+.ln{display:block;height:6px;border-radius:3px;background:var(--fg-dim);opacity:0;transition:opacity .25s;}
+.ln.on{opacity:.55;}
+.l1{width:92%}.l2{width:78%}.l3{width:88%}.l4{width:64%}.l5{width:84%}.l6{width:40%}
+#ca-json{margin:0;font-family:var(--mono);font-size:10.5px;line-height:1.45;color:var(--accent);white-space:pre-wrap;}
+.selo{position:absolute;right:8px;top:8px;padding:2px 8px;border:1px solid var(--warn);border-radius:5px;color:var(--warn);opacity:0;transition:opacity .3s;}
+.selo.on{opacity:1;}
+.chat-entrada{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-top:1px solid var(--line);color:var(--warn);}
+.env{width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;border:1px solid var(--line);color:var(--fg-dim);transition:all .2s;}
+.env.on{color:var(--bg-0);background:var(--accent);border-color:var(--accent);}
+
+/* ---------------- tela 3: resultado ---------------- */
+.tela-gerar{padding:0;overflow:hidden;}
+#resultado{position:absolute;inset:0;overflow:auto;display:flex;align-items:center;justify-content:center;padding:12px;}
+#arte{display:block;max-width:100%;max-height:100%;cursor:zoom-in;border:1px solid var(--line);background:var(--bg-0);}
+#arte.real{max-width:none;max-height:none;cursor:zoom-out;margin:auto;}
+#resultado:has(#arte.real){align-items:flex-start;justify-content:flex-start;}
+.vazio{text-align:center;color:var(--fg);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.vazio p{margin:0;}
+.olho{margin:0 0 6px;color:var(--accent);font-family:var(--mono);font-size:14px;line-height:1.2;text-align:left;}
+.vazio button{margin-top:8px;min-height:40px;}
+
+/* ---------------- painel de entrada ---------------- */
+#painel-corpo{flex:1 1 auto;min-height:0;overflow:auto;}
+.campo{padding:10px 12px;border-bottom:1px solid var(--line);}
+.rot{display:block;margin:0 0 6px;font-size:11.5px;color:var(--fg-dim);}
+.rot.esp{margin-top:10px;}
+.linha-acoes{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.linha-acoes button,.drop button{font-size:12px;}
+.drop{display:flex;align-items:center;gap:10px;padding:8px;border:1px dashed var(--line);border-radius:8px;transition:border-color .15s,background .15s;}
+.drop.sobre{border-color:var(--accent-2);background:rgba(95,179,255,.08);}
+.drop canvas{max-width:72px;max-height:72px;border:1px solid var(--line);border-radius:4px;flex:0 0 auto;}
+.drop-txt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;font-size:11.5px;overflow-wrap:anywhere;}
+#painel-corpo #code-editor{display:block;width:100%;height:132px;min-height:80px;border:1px solid var(--line);border-radius:6px;resize:vertical;font-size:12px;line-height:1.45;}
+#painel-corpo #code-editor:focus-visible{border-color:var(--accent-2);}
+#jsonInfo{font-size:11.5px;}
+#jsonInfo.ok{color:var(--accent);}
+#jsonInfo.err{color:var(--err);}
+#colunas{font-size:12px;}
+#console-output{flex:0 0 84px;}
+.fora{position:fixed;left:-9999px;top:0;opacity:0;}
+.sem-js{position:fixed;inset:auto 12px 40px 12px;margin:0;padding:12px;background:var(--bg-2);border:1px solid var(--warn);border-radius:8px;color:var(--warn);font-size:12.5px;z-index:2000;}
+
+/* ---------------- celular em pé e telas estreitas ---------------- */
+@media (max-width:760px){
+  .cards,.guia{grid-template-columns:1fr;}
+  .chat{position:static;}
+  .tela{padding:14px 12px;}
+  .cta{width:100%;}
+}
+@media (max-width:640px), (orientation: portrait) and (max-width: 860px){
+  #painel-corpo .linha-acoes button,.drop button{min-height:40px;}
+  #painel-corpo #code-editor{height:110px;}
+  #console-output{flex:0 0 64px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .passo,.anexo,.ln,.selo,.msg.ia,.env{transition:none;}
+}

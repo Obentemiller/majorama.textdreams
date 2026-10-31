@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<!-- Segurança: nada de scripts/estilos de fora, nenhuma conexão de rede (connect-src 'none'), sem formulários, sem plugins.
+     Workers só do próprio site. Tudo roda no navegador de quem usa. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'" />
+<meta name="referrer" content="no-referrer" />
+<title>Majorama.sonho — o sonho profundo de um LLM</title>
+<meta name="description" content="Transforme uma imagem em arte ASCII feita das palavras com que um LLM a descreve: um DeepDream de texto. Roda inteiro no seu navegador." />
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="vendor/majorama-ui/majorama-ui.css" />
+<link rel="stylesheet" href="app.css" />
+</head>
+<body>
+
+  <header id="topbar">
+    <div id="brand">
+      <span class="brand-glyph">▓▒░</span>
+      <h1>MAJORAMA<span class="dim">.sonho // Sonho profundo</span></h1>
+    </div>
+
+    <div id="controls">
+      <button id="homeBtn" title="Voltar ao início"><span class="ic">⌂</span><span class="txt">Início</span></button>
+      <button id="acaoBtn" title="Ação principal da etapa"><span class="ic">▶</span><span class="txt">Criar a arte</span></button>
+      <button id="bY" aria-pressed="true" title="Abrir/fechar o painel de entrada"><span class="ic">▤</span><span class="txt">Painel</span></button>
+      <button id="helpBtn" title="Tutorial guiado"><span class="ic">?</span><span class="txt">Ajuda</span></button>
+      <span id="perf"><span id="fps">FPS: --</span></span>
+    </div>
+  </header>
+
+  <main id="workspace">
+    <section id="terminal-pane" aria-label="Palco">
+      <div id="terminal-container">
+        <canvas id="bg" aria-hidden="true"></canvas>
+
+        <!-- ============ 1 · INÍCIO ============ -->
+        <section id="tela-intro" class="tela" aria-labelledby="introTitulo">
+          <div class="tela-in">
+            <p class="kicker">▓▒░ MAJORAMA.sonho</p>
+            <h2 id="introTitulo" class="titulo" tabindex="-1">O sonho profundo de um LLM</h2>
+            <p class="sub">O DeepDream mostrou o que uma rede neural enxerga. Aqui, um modelo de visão descreve o que enxerga, e a descrição vira a imagem.</p>
+
+            <div class="cards">
+              <article class="card">
+                <h3>DeepDream, 2015</h3>
+                <p>Alexander Mordvintsev, engenheiro do Google em Zurique, deu a uma rede neural treinada no ImageNet uma ordem estranha: <q>o que você vê aí, quero mais disso</q>.</p>
+                <p>Passo a passo, a imagem era alterada para exagerar os padrões que a rede reconhecia. Camadas rasas realçam traços e texturas; as profundas fazem brotar olhos, rostos e bichos. Como o ImageNet tem muitas raças de cachorro, eles apareciam por toda parte.</p>
+                <p>O Google publicou o método em junho de 2015, com o nome <b>Inceptionism</b> (uma referência à rede Inception e ao filme). Nuvens viravam animais, e o resultado parecia um sonho.</p>
+              </article>
+              <article class="card novo">
+                <h3>Sonho profundo, agora</h3>
+                <p>Aqui o sonho é feito de palavras. Um LLM com visão olha a sua imagem e descreve cada parte do que vê: céu, nuvem, colina, mão, unha.</p>
+                <p>O programa preenche cada região com a própria descrição, repetida, em ASCII, com a cor e a sombra da imagem original. Quando falta espaço, as letras vão sumindo: primeiro as vogais, depois as consoantes.</p>
+                <p>Não é o algoritmo do DeepDream: nenhum pixel é alterado por gradiente. É a mesma ideia de fundo, a máquina mostrando o que enxerga, só que em voz alta.</p>
+              </article>
+            </div>
+
+            <button id="intro-cta" class="cta" type="button">Criar a arte →</button>
+            <p class="nota">Nada sai do seu navegador: a imagem e o resultado são processados aqui mesmo.</p>
+          </div>
+        </section>
+
+        <!-- ============ 2 · COMO PEDIR ============ -->
+        <section id="tela-guia" class="tela" hidden aria-labelledby="guiaTitulo">
+          <div class="tela-in larga">
+            <h2 id="guiaTitulo" class="titulo" tabindex="-1">Peça a arte a um LLM</h2>
+            <p class="sub">Você vai levar um prompt e uma imagem até um LLM com visão (de preferência o Claude) e trazer de volta a resposta dele. Leva um minuto.</p>
+
+            <div class="guia">
+              <ol class="passos">
+                <li class="passo" data-n="1">
+                  <b><span class="n">1</span>Copie o prompt guia</b>
+                  <pre id="prompt-box" tabindex="0" aria-label="Prompt guia"></pre>
+                  <button id="btnCopiar" class="primario" type="button"><span class="ic">⧉</span><span class="txt">Copiar o prompt</span></button>
+                </li>
+                <li class="passo" data-n="2">
+                  <b><span class="n">2</span>Cole no chat e anexe a imagem</b>
+                  <p>Abra o <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">Claude</a> (ou outro LLM que aceite imagens), cole o prompt com <code>Ctrl+V</code>, anexe a imagem e envie.</p>
+                </li>
+                <li class="passo" data-n="3">
+                  <b><span class="n">3</span>Copie a resposta e volte aqui</b>
+                  <p>O LLM responde com um bloco de código JSON. Copie ele inteiro e use a mesma imagem na próxima etapa.</p>
+                  <button id="guia-pronto" class="cta pequeno" type="button">Já tenho o resultado →</button>
+                </li>
+              </ol>
+
+              <div id="chat-anim" class="chat" aria-hidden="true">
+                <div class="chat-barra"><i></i><i></i><i></i><span>chat com um LLM</span></div>
+                <div class="chat-corpo">
+                  <div class="msg usuario">
+                    <div class="anexo" id="ca-anexo">▣ minha-foto.jpg</div>
+                    <div class="linhas"><span class="ln l1"></span><span class="ln l2"></span><span class="ln l3"></span><span class="ln l4"></span><span class="ln l5"></span><span class="ln l6"></span></div>
+                  </div>
+                  <div class="msg ia" id="ca-ia"><pre id="ca-json"></pre><span class="selo" id="ca-copiar">copiar ⧉</span></div>
+                </div>
+                <div class="chat-entrada"><span id="ca-legenda">Escreva uma mensagem…</span><span id="ca-env" class="env">➤</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 3 · GERAR ============ -->
+        <section id="tela-gerar" class="tela tela-gerar" hidden aria-labelledby="gerarTitulo">
+          <h2 id="gerarTitulo" class="sr-only" tabindex="-1">Gerar a arte</h2>
+          <div id="resultado">
+            <div id="vazio" class="vazio">
+              <pre class="olho" aria-hidden="true">   .-""""-.
+  /  o  o  \
+  \   --   /
+   '-....-'</pre>
+              <p>A arte aparece aqui.</p>
+              <p class="dim">Envie a imagem e cole a resposta do LLM no painel; depois clique em <b>Gerar</b>.</p>
+              <button id="btnExemplo2" type="button">Ver com um exemplo pronto</button>
+            </div>
+            <canvas id="arte" hidden role="img" aria-label="Arte ASCII gerada a partir da sua imagem"></canvas>
+          </div>
+        </section>
+      </div>
+      <div id="status-bar"><span id="status-msg">Pronto.</span><span id="engine-mode">Majorama.sonho</span></div>
+    </section>
+
+    <div id="splitter" role="separator" aria-orientation="vertical" aria-label="Redimensionar o painel de entrada" tabindex="0"></div>
+
+    <aside id="editor-pane" aria-label="Painel de entrada">
+      <div id="editor-header">
+        <span>entrada</span>
+        <span class="acoes">
+          <button id="maxEditor" title="Maximizar/restaurar" aria-label="Maximizar" aria-pressed="false">⤢</button>
+          <button id="closeEditor" title="Fechar o painel" aria-label="Fechar o painel">✕</button>
+        </span>
+      </div>
+      <div id="editor-opts">
+        <button id="btnExemplo" type="button" title="Carrega uma imagem e uma resposta de exemplo e gera">Exemplo</button>
+        <button id="btnLimparTudo" type="button" title="Limpa imagem, texto e resultado">Limpar tudo</button>
+      </div>
+
+      <div id="painel-corpo">
+        <div class="campo" id="in-imagem">
+          <span class="rot">1 · Imagem (a mesma que você mostrou ao LLM)</span>
+          <input type="file" id="arquivo" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp,image/avif" hidden />
+          <div id="drop" class="drop">
+            <canvas id="miniatura" width="1" height="1" hidden aria-hidden="true"></canvas>
+            <div class="drop-txt">
+              <button id="btnImagem" type="button">Escolher imagem…</button>
+              <span id="infoImagem" class="dim">ou solte o arquivo aqui</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="campo" id="in-json">
+          <label class="rot" for="code-editor">2 · Resposta do LLM (o JSON)</label>
+          <textarea id="code-editor" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="200000" placeholder="Cole aqui a resposta inteira do LLM…"></textarea>
+          <div class="linha-acoes">
+            <button id="btnColar" type="button">Colar</button>
+            <button id="btnLimparJson" type="button">Limpar</button>
+            <span id="jsonInfo" class="dim" role="status"></span>
+          </div>
+        </div>
+
+        <div class="campo" id="in-fundo">
+          <span class="rot">3 · O mundo</span>
+          <div class="linha-acoes">
+            <button id="fundoPreto" type="button" aria-pressed="false">Mundo preto</button>
+            <button id="fundoCor" type="button" aria-pressed="true">Cor da imagem</button>
+          </div>
+          <label class="rot esp" for="colunas">Colunas (mais = mais detalhe, mais lento)</label>
+          <select id="colunas">
+            <option value="80">80</option>
+            <option value="100">100</option>
+            <option value="120" selected>120</option>
+            <option value="160">160</option>
+            <option value="200">200</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <div class="linha-acoes">
+            <button id="btnGerar" class="primario" type="button"><span class="ic">▶</span><span class="txt">Gerar</span></button>
+            <button id="btnTxt" type="button" disabled>Baixar .txt</button>
+            <button id="btnPng" type="button" disabled>Baixar .png</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="console-header">console</div>
+      <div id="console-output" role="log" aria-live="polite"></div>
+    </aside>
+  </main>
+
+  <footer id="footer">
+    <span>Majorama.sonho — um DeepDream de palavras. Toda a execução ocorre localmente no seu navegador.</span>
+    <span>
+      <a href="https://github.com/USUARIO/REPO/blob/main/manual.md" target="_blank" rel="noopener noreferrer">Manual</a>
+      <a href="https://github.com/USUARIO/REPO" target="_blank" rel="noopener noreferrer">Github/USUARIO</a>
+    </span>
+  </footer>
+
+  <!-- Sistema de ajuda (obrigatório em todo projeto Majorama) -->
+  <div id="tour" hidden>
+    <div id="tour-hl"></div>
+    <div id="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitulo">
+      <button id="tourSair" aria-label="Sair do tutorial" title="Sair (Esc)">✕</button>
+      <h2 id="tourTitulo"></h2>
+      <p id="tourTexto"></p>
+      <a id="tourLink" class="btn" target="_blank" rel="noopener noreferrer" hidden></a>
+      <div class="nav">
+        <span class="pos" id="tourPos"></span>
+        <button id="tourPrev">← Anterior</button>
+        <button id="tourNext">Próximo →</button>
+      </div>
+    </div>
+  </div>
+
+  <noscript><p class="sem-js">O Majorama.sonho precisa de JavaScript para rodar. Ele não envia nada a ninguém: tudo acontece no seu navegador.</p></noscript>
+
+  <script src="vendor/majorama-ui/majorama-ui.js"></script>
+  <script src="engine.js"></script>
+  <script src="prompt.js"></script>
+  <script src="arte.js"></script>
+  <script src="bg.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

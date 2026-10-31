@@ -1,0 +1,18 @@
+{"imagem": {"w": 623, "h": 630}, "regioes": [
+ {"id":"ceu","bbox":[0,0,100,46],"z":0,"cor":"#7fb8e6",
+  "desc":"Céu azul claro, mais intenso no alto e esbranquiçado perto do horizonte, com nuvens finas riscadas"},
+ {"id":"nuvem_dir","bbox":[82,3,100,26],"z":1,"cor":"#ffffff",
+  "desc":"Nuvem branca densa e fofa no canto superior direito, bordas suaves"},
+ {"id":"nuvem_esq","bbox":[0,15,38,45],"z":1,"cor":"#f4f8fc",
+  "desc":"Cúmulos brancos volumosos à esquerda, topo iluminado e base azulada"},
+ {"id":"montanhas","bbox":[0,36,100,52],"z":1,"cor":"#8fb4c9",
+  "desc":"Cadeia de montanhas azuladas e enevoadas ao fundo, contorno suave e pouco contraste"},
+ {"id":"colinas","bbox":[0,46,100,63],"z":2,"cor":"#5fa08a",
+  "desc":"Colinas ondulantes verde-azuladas em sombra leve, com névoa nos vales"},
+ {"id":"floresta","bbox":[0,57,100,85],"z":3,"cor":"#3f7a2e",
+  "desc":"Manchas de árvores e arbustos verde-escuros na encosta, copas iluminadas pelo sol"},
+ {"id":"encosta","bbox":[22,64,72,83],"z":3,"cor":"#7cc243",
+  "desc":"Encosta de relva clara e lisa, verde-amarelada, banhada pela luz do sol"},
+ {"id":"campo","bbox":[0,80,100,100],"z":4,"cor":"#5db52e",
+  "desc":"Campo de grama verde viva em primeiro plano, textura fina com tufos escuros"}
+]}
