@@ -1,64 +1,64 @@
-# Manual do Majorama.sonho
+# Majorama.textdreams Manual
 
-> Prefere um passeio guiado? Toque em **? Ajuda** na barra superior (no celular, na barra de baixo). O tutorial se adapta à tela em que você está.
+> Prefer a guided tour? Tap **? Help** in the top bar (on mobile, in the bottom bar). The tutorial adapts to the screen you're on.
 
-O Majorama.sonho é um "DeepDream de um LLM": um modelo de visão **descreve** as regiões da sua imagem, e este site preenche cada região com a **própria descrição**, em ASCII colorido. Tudo roda no seu navegador; nada é enviado a lugar nenhum.
+Majorama.sonho is a "DeepDream for an LLM": a vision model **describes** the regions of your image, and this site fills each region with its **own description**, in colored ASCII. Everything runs in your browser; nothing is sent anywhere.
 
-## 1. A tela
+## 1. The screen
 
-- **Barra superior:** `Início` (volta à abertura), o botão principal (muda conforme a etapa: *Criar a arte*, *Já tenho o resultado*, *Gerar*), `Painel` (abre/fecha a entrada) e `? Ajuda`. `FPS` mostra a velocidade da animação de fundo.
-- **Palco (esquerda):** na abertura e no guia, mostra o fundo animado; na tela de geração, mostra a sua arte. **Clique na arte** para alternar entre "caber na tela" e "tamanho real".
-- **Painel (direita):** a entrada (imagem, JSON, mundo, colunas) e os botões de gerar e baixar. Arraste o **divisor** para redimensionar (setas do teclado também; duplo clique restaura). No celular em pé, ele vira uma gaveta embaixo.
-- **Console:** mensagens do programa (erros, avisos, tempo de geração).
+- **Top bar:** `Home` (returns to the intro), the main button (it changes with each step: *Create the art*, *I already have the result*, *Generate*), `Panel` (opens/closes the input) and `? Help`. `FPS` shows the speed of the background animation.
+- **Stage (left):** on the intro and guide screens, it shows the animated background; on the generation screen, it shows your art. **Click the art** to toggle between "fit to screen" and "actual size".
+- **Panel (right):** the input (image, JSON, world, columns) and the generate and download buttons. Drag the **divider** to resize it (arrow keys work too; double-click restores it). On a portrait phone, it becomes a drawer at the bottom.
+- **Console:** program messages (errors, warnings, generation time).
 
-## 2. Como usar
+## 2. How to use it
 
-1. **Abertura.** Leia a história do DeepDream e do que muda aqui. Clique em **Criar a arte**.
-2. **Guia.** Clique em **Copiar o prompt**. Abra um LLM com visão (de preferência o Claude), cole o prompt, anexe **a imagem** e envie. A resposta vem como um bloco de código JSON. Copie ele inteiro. Clique em **Já tenho o resultado**.
-3. **Gerar.**
-   1. *Imagem:* escolha (ou solte) **a mesma imagem** que mostrou ao LLM. PNG, JPG, WebP, GIF (primeiro quadro), BMP ou AVIF, até 25 MB / 80 megapixels.
-   2. *Resposta do LLM:* cole o JSON. Pode vir com texto em volta e com a cerca ```` ```json ````: o programa encontra o JSON sozinho. Abaixo do campo aparece `✓ N regiões` ou o motivo do erro.
-   3. *O mundo:* **Mundo preto** (só as letras coloridas) ou **Cor da imagem** (o fundo de cada célula recebe o tom da foto). Trocar o mundo **não** precisa gerar de novo.
-   4. *Colunas:* 80 a 200. Mais colunas = mais detalhe e mais tempo.
-   5. **Gerar** (ou `Ctrl+Enter` no campo do JSON).
-4. **Levar a arte.** `Baixar .txt` (texto puro, sem cor) ou `Baixar .png` (com cores e o mundo escolhido).
+1. **Intro.** Read the history of DeepDream and what changes here. Click **Create the art**.
+2. **Guide.** Click **Copy the prompt**. Open a vision-capable LLM (preferably Claude), paste the prompt, attach **the image**, and send. The response comes back as a JSON code block. Copy it in full. Click **I already have the result**.
+3. **Generate.**
+   1. *Image:* choose (or drop) **the same image** you showed the LLM. PNG, JPG, WebP, GIF (first frame), BMP or AVIF, up to 25 MB / 80 megapixels.
+   2. *LLM response:* paste the JSON. It may come with text around it and with the ```` ```json ```` fence: the program finds the JSON on its own. Below the field, `✓ N regions` or the reason for the error appears.
+   3. *The world:* **Black world** (only the colored letters) or **Image color** (each cell's background takes the tone of the photo). Switching the world does **not** require generating again.
+   4. *Columns:* 80 to 200. More columns = more detail and more time.
+   5. **Generate** (or `Ctrl+Enter` in the JSON field).
+4. **Take the art.** `Download .txt` (plain text, no color) or `Download .png` (with colors and the chosen world).
 
-**Botão Exemplo:** carrega uma paisagem desenhada na hora e um JSON pronto, para ver o resultado sem precisar de LLM.
+**Example button:** loads a landscape drawn on the spot and a ready-made JSON, so you can see the result without needing an LLM.
 
-## 3. O que o programa faz com o JSON
+## 3. What the program does with the JSON
 
-- Cada região tem `bbox` (caixa em %), `z` (camada: maior fica na frente), `cor` e `desc`.
-- A caixa só é uma **dica**: a forma real vem da cor da imagem dentro e em volta da caixa.
-- O contorno é feito de `/ \ | -`. Dentro, a descrição se repete para preencher a área.
-- Área estreita e alta escreve na vertical; larga e baixa, na horizontal.
-- Se a descrição não cabe, as letras somem espalhadas: **vogais primeiro**, depois consoantes e espaços juntos.
-- Cores e sombras vêm da imagem original.
+- Each region has `bbox` (box in %), `z` (layer: the higher one is in front), `color` and `desc`.
+- The box is only a **hint**: the real shape comes from the image color inside and around the box.
+- The outline is made of `/ \ | -`. Inside, the description repeats to fill the area.
+- A narrow, tall area is written vertically; a wide, short one, horizontally.
+- If the description doesn't fit, letters disappear scattered: **vowels first**, then consonants and spaces together.
+- Colors and shadows come from the original image.
 
-## 4. Problemas comuns
+## 4. Common problems
 
-| Sintoma | Causa provável |
+| Symptom | Probable cause |
 |---|---|
-| `Não encontrei um JSON nessa resposta` | Você copiou só o texto de explicação; copie o bloco de código inteiro. |
-| `O JSON está incompleto` | A resposta do LLM foi cortada. Peça "continue" ou refaça e cole tudo. |
-| `O JSON tem erro de sintaxe` | Vírgula faltando ou aspas trocadas. Peça ao LLM para devolver só o bloco JSON válido. |
-| `Regiões demais` | Máximo de 64 regiões. O prompt pede de 6 a 20. |
-| Região "sumiu" ou virou outra | A caixa/cor do LLM não bate com a imagem. Confira se é **a mesma imagem** e se `cor` é a cor real da região. |
-| Letras demais viram bagunça | Descrição longa em área pequena: pedaços somem de propósito. Use mais colunas ou descrições mais curtas (a parte importante primeiro). |
-| `Formato não suportado` | O arquivo não é uma imagem aceita (SVG é recusado de propósito). |
-| `Demorou demais` | Reduza as colunas ou use uma imagem menor. |
-| O botão Colar não funciona | O navegador bloqueou a área de transferência: clique no campo e use `Ctrl+V`. |
-| Animação de fundo parada | Seu sistema pede "reduzir movimento": o fundo fica em um quadro só. |
+| `No JSON found in this response` | You copied only the explanatory text; copy the whole code block. |
+| `The JSON is incomplete` | The LLM response was cut off. Ask it to "continue" or redo it and paste everything. |
+| `The JSON has a syntax error` | A missing comma or swapped quotes. Ask the LLM to return only the valid JSON block. |
+| `Too many regions` | Maximum of 64 regions. The prompt asks for 6 to 20. |
+| A region "disappeared" or became something else | The LLM's box/color doesn't match the image. Check that it's **the same image** and that `color` is the region's real color. |
+| Too many letters, a mess | Long description in a small area: pieces disappear on purpose. Use more columns or shorter descriptions (the important part first). |
+| `Unsupported format` | The file isn't an accepted image (SVG is rejected on purpose). |
+| `Took too long` | Reduce the columns or use a smaller image. |
+| The Paste button doesn't work | The browser blocked clipboard access: click the field and use `Ctrl+V`. |
+| Background animation is frozen | Your system asks to "reduce motion": the background stays on a single frame. |
 
-## 5. Privacidade e segurança
+## 5. Privacy and security
 
-- A imagem e o JSON **ficam no seu navegador**. A página bloqueia, por política de segurança (CSP), qualquer conexão de rede e qualquer script que não seja o do próprio projeto.
-- O tipo da imagem é conferido pelos bytes, não pelo nome. O texto do LLM só vira letras desenhadas; nunca é interpretado como código ou HTML.
-- Os arquivos baixados têm nome fixo (`sonho-profundo.txt` / `.png`).
+- The image and the JSON **stay in your browser**. The page blocks, through a security policy (CSP), any network connection and any script other than the project's own.
+- The image type is checked by its bytes, not by its name. The LLM's text only becomes drawn letters; it is never interpreted as code or HTML.
+- Downloaded files have fixed names (`sonho-profundo.txt` / `.png`).
 
-## 6. Limites conhecidos
+## 6. Known limits
 
-- **Não é o algoritmo do DeepDream:** nenhum pixel é alterado por gradiente. É a mesma ideia, "a máquina mostrando o que enxerga", só que em palavras.
-- O segmentador é uma heurística (caixa do LLM + cor real). Regiões finas, muito parecidas na cor ou com caixas muito erradas podem sair imprecisas.
-- O LLM só **descreve**; quem desenha é o script. Por isso o resultado é padronizado, mas depende da qualidade das caixas e cores que o LLM devolve.
-- Só imagens estáticas (GIF usa o primeiro quadro). Vídeo ainda não.
-- A animação da abertura é pré-programada: é uma ilustração de como o LLM "descreve", não uma execução real.
+- **It is not the DeepDream algorithm:** no pixel is altered by gradient. It's the same idea, "the machine showing what it sees", just in words.
+- The segmenter is a heuristic (LLM box + actual color). Thin regions, regions very similar in color, or very wrong boxes may come out imprecise.
+- The LLM only **describes**; the script does the drawing. So the result is standardized, but it depends on the quality of the boxes and colors the LLM returns.
+- Static images only (GIF uses its first frame). Video is not supported yet.
+- The intro animation is preprogrammed: it's an illustration of how the LLM "describes", not a real run.
