@@ -2,6 +2,8 @@
 
 A **DeepDream for an LLM**: a vision model describes the regions of an image, and the site fills each region with its own description, in colored ASCII. It runs entirely in the browser (no data leaves your machine).
 
+https://obentemiller.github.io/majorama.textdreams/
+
 ## How it works
 
 1. **Intro:** the history of DeepDream (2015) and what changes here.
